@@ -1,43 +1,72 @@
-<div class="p-m-4">
+<div class="m-auto max-w-4xl p-4">
   <h1 class="text-2xl font-bold mb-4">Nearest Trucks Search</h1>
 
   <!-- Form Section -->
-  <div class="p-fluid p-formgrid p-grid mb-4">
-    <div class="p-field p-col-12">
-      <label for="pickupLocation" class="block text-gray-700 font-medium mb-2"
-        >Pick-up Location:</label
-      >
-      <p-inputText
-        id="pickupLocation"
-        [(ngModel)]="pickupLocation"
-        name="pickupLocation"
-        placeholder="Enter pick-up address"
-      >
-      </p-inputText>
-    </div>
+  <form [formGroup]="truckSearchForm" (ngSubmit)="onSubmit()">
+    <div class="p-fluid p-formgrid p-grid mb-4">
+      <!-- Pickup Location -->
+      <div class="p-field p-col-12">
+        <label
+          for="pickupLocation"
+          class="block text-gray-700 font-medium mb-2"
+        >
+          Pick-up Location:
+        </label>
+        <input
+          id="pickupLocation"
+          pInputText
+          formControlName="pickupLocation"
+          placeholder="Enter pick-up address"
+        />
+        <div
+          *ngIf="
+            pickupLocationControl!.invalid &&
+            (pickupLocationControl!.touched || submitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <span *ngIf="pickupLocationControl!.errors?.['required']">
+            Pick-up location is required.
+          </span>
+        </div>
+      </div>
 
-    <div class="p-field p-col-12">
-      <label for="searchRadius" class="block text-gray-700 font-medium mb-2"
-        >Search Radius (miles):</label
-      >
-      <p-inputNumber
-        id="searchRadius"
-        [(ngModel)]="searchRadius"
-        name="searchRadius"
-      >
-      </p-inputNumber>
-    </div>
+      <!-- Search Radius -->
+      <div class="p-field p-col-12">
+        <label for="searchRadius" class="block text-gray-700 font-medium mb-2">
+          Search Radius (miles):
+        </label>
+        <p-inputNumber
+          id="searchRadius"
+          formControlName="searchRadius"
+        ></p-inputNumber>
+        <div
+          *ngIf="
+            searchRadiusControl!.invalid &&
+            (searchRadiusControl!.touched || submitted)
+          "
+          class="text-red-600 text-sm"
+        >
+          <span *ngIf="searchRadiusControl!.errors?.['required']">
+            Search radius is required.
+          </span>
+          <span *ngIf="searchRadiusControl!.errors?.['min']">
+            Minimum search radius is 1 mile.
+          </span>
+        </div>
+      </div>
 
-    <div class="p-field p-col-12">
-      <p-button
-        label="Search"
-        icon="pi pi-search"
-        (onClick)="searchTrucks()"
-        class="w-full"
-      >
-      </p-button>
+      <!-- Search Button -->
+      <div class="p-field p-col-12">
+        <p-button
+          label="Search"
+          icon="pi pi-search"
+          type="submit"
+          class="w-full"
+        ></p-button>
+      </div>
     </div>
-  </div>
+  </form>
 
   <!-- Loading & Error Message -->
   <div *ngIf="loading" class="text-center text-gray-600 p-m-4">
